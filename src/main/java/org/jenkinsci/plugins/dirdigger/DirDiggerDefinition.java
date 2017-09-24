@@ -11,9 +11,12 @@ import org.kohsuke.stapler.StaplerRequest;
 
 public class DirDiggerDefinition extends ParameterDefinition {
 
+    private final String root;
+
     @DataBoundConstructor
-    public DirDiggerDefinition(String name, String description) {
+    public DirDiggerDefinition(String name, String description, String root) {
         super(name, description);
+        this.root = root;
     }
 
     @Override
@@ -24,6 +27,10 @@ public class DirDiggerDefinition extends ParameterDefinition {
     @Override
     public ParameterValue createValue(StaplerRequest staplerRequest) {
         return null;
+    }
+
+    public String getRoot() {
+        return root;
     }
 
     @Extension
