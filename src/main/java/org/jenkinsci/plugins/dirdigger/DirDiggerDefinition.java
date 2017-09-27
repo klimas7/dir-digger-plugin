@@ -1,26 +1,25 @@
 package org.jenkinsci.plugins.dirdigger;
 
-import hudson.Extension;
-import hudson.model.ParameterDefinition;
-import hudson.model.ParameterValue;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import hudson.Extension;
+import hudson.model.ParameterDefinition;
+import hudson.model.ParameterValue;
 import hudson.model.StringParameterValue;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.export.Exported;
 
 public class DirDiggerDefinition extends ParameterDefinition {
-
     private final String root;
+    private final Integer depth;
 
     @DataBoundConstructor
-    public DirDiggerDefinition(String name, String description, String root) {
+    public DirDiggerDefinition(String name, String description, String root, Integer depth) {
         super(name, description);
         this.root = root;
+        this.depth = depth;
     }
 
     @Override
@@ -40,6 +39,10 @@ public class DirDiggerDefinition extends ParameterDefinition {
         return root;
     }
 
+    public Integer getDepth() {
+        return depth;
+    }
+
     //@Exported
     public Map<String, String> getFiles(Integer level) {
         Map<String, String> files = new HashMap<>();
@@ -49,8 +52,7 @@ public class DirDiggerDefinition extends ParameterDefinition {
     }
 
     @Extension
-    public static class DescriptorImpl extends ParameterDescriptor
-    {
+    public static class DescriptorImpl extends ParameterDescriptor {
         @Override
         public String getDisplayName() {
             return "Dir Digger";
