@@ -3,11 +3,14 @@ package org.jenkinsci.plugins.dirdigger;
 import hudson.Extension;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
-import hudson.model.StringParameterDefinition;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sf.json.JSONObject;
-import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.export.Exported;
 
 public class DirDiggerDefinition extends ParameterDefinition {
 
@@ -21,16 +24,26 @@ public class DirDiggerDefinition extends ParameterDefinition {
 
     @Override
     public ParameterValue createValue(StaplerRequest staplerRequest, JSONObject jsonObject) {
+        //TODO
         return null;
     }
 
     @Override
     public ParameterValue createValue(StaplerRequest staplerRequest) {
+        //TODO
         return null;
     }
 
     public String getRoot() {
         return root;
+    }
+
+    @Exported
+    public Map<String, String> getFiles() {
+        Map<String, String> files = new HashMap<>();
+        files.put("/opt/Test", "Test");
+        files.put("/opt/Test2", "Test2");
+        return files;
     }
 
     @Extension

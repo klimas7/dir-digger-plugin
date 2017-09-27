@@ -1,8 +1,13 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:entry title="${it.name}" description="${it.description}">
-        <div name="parameter" description="${it.description}" >
+        <div name="parameter">
             <input type="hidden" name="name" value="${it.name}"/>
+            <select name="value">
+                <j:forEach var="file" items="${it.files}">
+                    <f:option value="${file.key}">${file.value}</f:option>
+                </j:forEach>
+            </select>
         </div>
     </f:entry>
 </j:jelly>
