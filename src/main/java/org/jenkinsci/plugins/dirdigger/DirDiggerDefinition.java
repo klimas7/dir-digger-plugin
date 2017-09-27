@@ -40,11 +40,11 @@ public class DirDiggerDefinition extends ParameterDefinition {
         return root;
     }
 
-    @Exported
-    public Map<String, String> getFiles() {
+    //@Exported
+    public Map<String, String> getFiles(Integer level) {
         Map<String, String> files = new HashMap<>();
-        files.put("/opt/Test", "Test");
-        files.put("/opt/Test2", "Test2");
+        files.put("/opt/Test", "Test_" + level);
+        files.put("/opt/Test2", "Test2" + level);
         return files;
     }
 
