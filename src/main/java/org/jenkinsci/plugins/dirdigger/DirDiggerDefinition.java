@@ -24,7 +24,7 @@ public class DirDiggerDefinition extends ParameterDefinition {
 
     @Override
     public ParameterValue createValue(StaplerRequest req, JSONObject jo) {
-        StringParameterValue value = req.bindJSON(StringParameterValue.class, jo);
+        DirDiggerValue value = req.bindJSON(DirDiggerValue.class, jo);
         value.setDescription(getDescription());
         return value;
     }
