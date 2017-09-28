@@ -7,7 +7,6 @@ import java.util.Map;
 import hudson.Extension;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
-import hudson.model.StringParameterValue;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -16,12 +15,14 @@ import org.kohsuke.stapler.StaplerRequest;
 public class DirDiggerDefinition extends ParameterDefinition {
     private final String root;
     private final Integer depth;
+    private TreeNode<String> fileTree;
 
     @DataBoundConstructor
     public DirDiggerDefinition(String name, String description, String root, Integer depth) {
         super(name, description);
         this.root = root;
         this.depth = depth;
+        this.fileTree = new TreeNode<>(root);
     }
 
     @Override
@@ -56,8 +57,9 @@ public class DirDiggerDefinition extends ParameterDefinition {
         return depth;
     }
 
-    //@Exported
     public Map<String, String> getFiles(Integer level) {
+        FileTreeBuilder.build(fileTree, depth);
+
         Map<String, String> files = new HashMap<>();
         files.put("Test_" + level, "Test_" + level);
         files.put("Test_X_" + level, "Test_X_" + level);
