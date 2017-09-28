@@ -1,22 +1,15 @@
 package org.jenkinsci.plugins.dirdigger;
 
-import java.util.HashMap;
-import java.util.Map;
+import hudson.model.StringParameterValue;
 
-import hudson.model.ParameterValue;
+import java.util.ArrayList;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
-public class DirDiggerValue extends ParameterValue{
-    private Map<String, String> value;
+public class DirDiggerValue extends StringParameterValue {
 
     @DataBoundConstructor
-    public DirDiggerValue(String name, String description) {
-        super(name, description);
-        value = new HashMap<>();
-    }
-
-    @Override
-    public Map<String, String> getValue() {
-        return value;
+    public DirDiggerValue(String name, String value) {
+        super(name, value);
     }
 }
