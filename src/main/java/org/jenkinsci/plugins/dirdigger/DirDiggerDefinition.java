@@ -1,12 +1,13 @@
 package org.jenkinsci.plugins.dirdigger;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import hudson.Extension;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -57,12 +58,12 @@ public class DirDiggerDefinition extends ParameterDefinition {
         return depth;
     }
 
-    public Map<String, String> getFiles(Integer level) {
+    public List<String> getFiles(Integer level) {
         FileTreeBuilder.build(fileTree, depth);
 
-        Map<String, String> files = new HashMap<>();
-        files.put("Test_" + level, "Test_" + level);
-        files.put("Test_X_" + level, "Test_X_" + level);
+        List<String> files = new ArrayList<>();
+        files.add("Test_" + level);
+        files.add("Test_X_" + level);
         return files;
     }
 
