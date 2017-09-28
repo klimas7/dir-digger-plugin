@@ -39,7 +39,7 @@ public class DirDiggerDefinition extends ParameterDefinition {
                 strValue.append(element).append(File.separator);
             }
         }
-        strValue.setLength(strValue.length() -1 );
+        strValue.setLength(strValue.length() - 1);
         DirDiggerValue dirDiggerValue = new DirDiggerValue(jo.getString("name"), strValue.toString());
         return dirDiggerValue;
     }
