@@ -22,7 +22,24 @@
             </table>
         </div>
         <script type="text/javascript">
+            for (let lvl=1; lvl &lt; (${it.depth}); lvl++) {
+                let lvl_id = "lvl_" + lvl;
+                jQuery("#"+lvl_id+"").change(function() {
+                    var values = [];
+                    for (let i=1; i &lt;= lvl; i++) {
+                        values.push(jQuery("#lvl_" + i).val())
+                    }
 
+
+
+                    let jsonValues = encodeURIComponent(JSON.stringify(values))
+                    jQuery.ajax({
+                        url: '${h.getCurrentDescriptorByNameUrl()}/${it.descriptor.descriptorUrl}/fillValueItems?parameterName=${it.name}&amp;level='+lvl+'&amp;jsonFileNames='+jsonValues
+                    }).done(function() {
+                            console.log(jsonValues);
+                    });
+                });
+            }
         </script>
     </f:entry>
 </j:jelly>
