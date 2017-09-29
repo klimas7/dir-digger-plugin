@@ -26,35 +26,8 @@
             for (let lvl=1; lvl &lt;= (${it.depth}); lvl++) {
                 selections.push(jQuery("#lvl_"+lvl));
             }
-            new DirDigger.Digger(selections);
 
-            for (let lvl=1; lvl &lt; (${it.depth}); lvl++) {
-                jQuery("#lvl_"+lvl).change(function() {
-                    var values = [];
-                    for (let i=1; i &lt;= lvl; i++) {
-                        values.push(jQuery("#lvl_" + i).val())
-                    }
-
-                    let jsonValues = values.toJSON()
-                    jQuery.ajax({
-                        url: '${h.getCurrentDescriptorByNameUrl()}/${it.descriptor.descriptorUrl}/fillValueItems?parameterName=${it.name}&amp;jsonFileNames='+jsonValues
-                    }).done(function(listModelBox) {
-                            console.log(listModelBox.values);
-                            let lvlID = "#lvl_"+(lvl+1);
-
-                            console.log(lvlID)
-                            let selection = jQuery(lvlID);
-                            selection.find('option').remove().end();
-                            jQuery.each(listModelBox.values, function(j, value) {
-                                console.log(value.value);
-                                selection.append(jQuery('&lt;option>', {
-                                    value: value.value,
-                                    text: value.value
-                                }));
-                            });
-                    });
-                });
-            }
+            new DirDigger.Digger(selections,'${it.name}','${h.getCurrentDescriptorByNameUrl()}/${it.descriptor.descriptorUrl}');
         </script>
     </f:entry>
 </j:jelly>
