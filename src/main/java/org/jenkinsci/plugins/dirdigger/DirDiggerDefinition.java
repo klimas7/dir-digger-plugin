@@ -1,8 +1,12 @@
 package org.jenkinsci.plugins.dirdigger;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.Extension;
 import hudson.model.Job;
 import hudson.model.ParameterDefinition;
@@ -70,8 +74,8 @@ public class DirDiggerDefinition extends ParameterDefinition {
         return FileTreeBuilder.getFileFromLevel(fileTree, level);
     }
 
-    public List<String> getFiles(Integer level, String fileName) {
-        return FileTreeBuilder.getFileUnderLevelAndFiler(fileTree, level, fileName);
+    public List<String> getFiles(String jsonFileNames) {
+        return FileTreeBuilder.getFileFromTree(fileTree, jsonFileNames);
     }
 
     @Extension
@@ -81,17 +85,16 @@ public class DirDiggerDefinition extends ParameterDefinition {
             return "Dir Digger";
         }
 
-        public ListBoxModel doFillValueItems(@AncestorInPath Job job, @QueryParameter String parameterName, @QueryParameter Integer level, @QueryParameter String jsonFileNames) {
-            ListBoxModel items =new ListBoxModel();
-
+        public ListBoxModel doFillValueItems(@AncestorInPath Job job, @QueryParameter String parameterName, @QueryParameter String jsonFileNames) {
+            ListBoxModel items = new ListBoxModel();
             ParametersDefinitionProperty property = (ParametersDefinitionProperty) job.getProperty(ParametersDefinitionProperty.class);
             if (property != null) {
                 ParameterDefinition parameterDefinition = property.getParameterDefinition(parameterName);
                 if (parameterDefinition instanceof DirDiggerDefinition) {
                     DirDiggerDefinition dirDigger = (DirDiggerDefinition) parameterDefinition;
-//                    for (String file : dirDigger.getFiles(level, fileName)) {
-//                        items.add(file);
-//                    }
+                    for (String file : dirDigger.getFiles(jsonFileNames)) {
+                        items.add(file);
+                    }
                 }
             }
             return items;

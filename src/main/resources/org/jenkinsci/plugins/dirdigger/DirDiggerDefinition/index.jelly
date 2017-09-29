@@ -22,21 +22,36 @@
             </table>
         </div>
         <script type="text/javascript">
+            let selections = [];
+            for (let lvl=1; lvl &lt;= (${it.depth}); lvl++) {
+                selections.push(jQuery("#lvl_"+lvl));
+            }
+            new DirDigger.Digger(selections);
+
             for (let lvl=1; lvl &lt; (${it.depth}); lvl++) {
-                let lvl_id = "lvl_" + lvl;
-                jQuery("#"+lvl_id+"").change(function() {
+                jQuery("#lvl_"+lvl).change(function() {
                     var values = [];
                     for (let i=1; i &lt;= lvl; i++) {
                         values.push(jQuery("#lvl_" + i).val())
                     }
 
-
-
-                    let jsonValues = encodeURIComponent(JSON.stringify(values))
+                    let jsonValues = values.toJSON()
                     jQuery.ajax({
-                        url: '${h.getCurrentDescriptorByNameUrl()}/${it.descriptor.descriptorUrl}/fillValueItems?parameterName=${it.name}&amp;level='+lvl+'&amp;jsonFileNames='+jsonValues
-                    }).done(function() {
-                            console.log(jsonValues);
+                        url: '${h.getCurrentDescriptorByNameUrl()}/${it.descriptor.descriptorUrl}/fillValueItems?parameterName=${it.name}&amp;jsonFileNames='+jsonValues
+                    }).done(function(listModelBox) {
+                            console.log(listModelBox.values);
+                            let lvlID = "#lvl_"+(lvl+1);
+
+                            console.log(lvlID)
+                            let selection = jQuery(lvlID);
+                            selection.find('option').remove().end();
+                            jQuery.each(listModelBox.values, function(j, value) {
+                                console.log(value.value);
+                                selection.append(jQuery('&lt;option>', {
+                                    value: value.value,
+                                    text: value.value
+                                }));
+                            });
                     });
                 });
             }

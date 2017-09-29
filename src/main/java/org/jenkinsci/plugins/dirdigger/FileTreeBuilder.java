@@ -1,10 +1,13 @@
 package org.jenkinsci.plugins.dirdigger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FileTreeBuilder {
     public synchronized static void build(TreeNode<String> fileTree, Integer depth) {
@@ -37,6 +40,13 @@ public class FileTreeBuilder {
 
     public static List<String> getFileFromLevel(TreeNode<String> fileTree, Integer level) {
         List<TreeNode<String>> children = getChildren(fileTree, level);
+        return convert(children);
+    }
+
+    private static List<String> convert(List<TreeNode<String>> children) {
+        if (children == null) {
+            return Collections.emptyList();
+        }
         List<String> files = new ArrayList<>(children.size());
         for (TreeNode<String> node : children) {
             files.add(node.data);
@@ -56,8 +66,27 @@ public class FileTreeBuilder {
         }
     }
 
-    public static List<String> getFileUnderLevelAndFiler(TreeNode<String> fileTree, Integer level, String fileName) {
-        //TODO
-        return null;
+    public static List<String> getFileFromTree(TreeNode<String> fileTree, String jsonFileNames) {
+        List<String> files = getFileNames(jsonFileNames);
+        List<TreeNode<String>> children = fileTree.getChildren();
+        for (String file : files) {
+            for (TreeNode<String> x : children) {
+                if (file.equals(x.getData())) {
+                    children = x.getChildren();
+                    break;
+                }
+            }
+        }
+        return convert(children);
+    }
+
+    private static List<String> getFileNames(String jsonFileNames) {
+        ObjectMapper obj = new ObjectMapper();
+        try {
+            return obj.readValue(jsonFileNames, List.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 }
