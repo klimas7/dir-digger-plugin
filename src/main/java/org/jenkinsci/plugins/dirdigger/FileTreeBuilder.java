@@ -19,10 +19,14 @@ public class FileTreeBuilder {
     }
 
     private static void deeper(File root, TreeNode rootTree, int depth) {
-        if (depth == 0) {
+        if (depth == 0 || root == null || rootTree == null) {
             return;
         }
-        for (File file : root.listFiles()) {
+        File[] files = root.listFiles();
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
             if (file.isDirectory()) {
                 TreeNode child = rootTree.addChild(file.getName());
                 deeper(file, child, depth -1);
