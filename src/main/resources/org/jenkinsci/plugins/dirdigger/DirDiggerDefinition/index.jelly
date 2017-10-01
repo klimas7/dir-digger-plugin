@@ -22,12 +22,12 @@
             </table>
         </div>
         <script type="text/javascript">
-            let selections = [];
+            var selections = [];
             for (let lvl=1; lvl &lt;= (${it.depth}); lvl++) {
                 selections.push(jQuery("#lvl_"+lvl));
             }
 
-            new DirDigger.Digger(selections,'${it.name}','${h.getCurrentDescriptorByNameUrl()}/${it.descriptor.descriptorUrl}');
+            new DirDigger.Digger(selections, '${it.name}', '${h.getCurrentDescriptorByNameUrl()}/${it.descriptor.descriptorUrl}');
         </script>
     </f:entry>
 </j:jelly>
