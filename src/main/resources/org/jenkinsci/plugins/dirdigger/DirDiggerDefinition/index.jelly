@@ -2,8 +2,9 @@
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:st="jelly:stapler">
     <st:adjunct includes="org.kohsuke.stapler.jquery"/>
     <st:adjunct includes="org.jenkinsci.plugins.dirdigger.script"/>
+    <j:set var="divId" value="${it.divUUID}" scope="parent"/>
     <f:entry title="${it.name}" description="${it.description}">
-        <div name="parameter">
+        <div name="parameter" id="${divId}">
             <input type="hidden" name="name" value="${it.name}"/>
             <j:invoke method="initTree" on="${it}"/>
             <table>
@@ -22,9 +23,10 @@
             </table>
         </div>
         <script type="text/javascript">
+            var parentDiv = jQuery('#${divId}');
             var selections = [];
             for (let lvl=1; lvl &lt;= (${it.depth}); lvl++) {
-                selections.push(jQuery("#lvl_"+lvl));
+                selections.push(parentDiv.find("#lvl_"+lvl));
             }
 
             new DirDigger.Digger(selections, '${it.name}', '${h.getCurrentDescriptorByNameUrl()}/${it.descriptor.descriptorUrl}');

@@ -1,12 +1,9 @@
 package org.jenkinsci.plugins.dirdigger;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.Extension;
 import hudson.model.Job;
 import hudson.model.ParameterDefinition;
@@ -21,6 +18,7 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 public class DirDiggerDefinition extends ParameterDefinition {
+    private final UUID uuid;
     private final String root;
     private final Integer depth;
     private TreeNode<String> fileTree;
@@ -28,6 +26,7 @@ public class DirDiggerDefinition extends ParameterDefinition {
     @DataBoundConstructor
     public DirDiggerDefinition(String name, String description, String root, Integer depth) {
         super(name, description);
+        uuid = UUID.randomUUID();
         this.root = root;
         this.depth = depth;
         this.fileTree = new TreeNode<>(root);
@@ -64,6 +63,13 @@ public class DirDiggerDefinition extends ParameterDefinition {
     public Integer getDepth() {
         return depth;
     }
+
+    public String getDivUUID() {
+        StringBuilder randomSelectName = new StringBuilder();
+        randomSelectName.append(getName()).append("-").append(uuid);
+        return randomSelectName.toString();
+    }
+
 
     public void initTree() {
         fileTree = new TreeNode<>(root);
