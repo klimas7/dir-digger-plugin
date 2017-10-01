@@ -12,4 +12,9 @@
     <f:entry title="Depth" field="depth">
         <f:textbox/>
     </f:entry>
+
+    <f:entry title="Additional Behaviours">
+        <f:hetero-list name="extensions" items="${instance.extensions}" descriptors="${descriptor.getExtensionDescriptors()}"
+                       hasHeader="true" />
+    </f:entry>
 </j:jelly>

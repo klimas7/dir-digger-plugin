@@ -5,13 +5,18 @@ import java.util.List;
 import java.util.UUID;
 
 import hudson.Extension;
+import hudson.Util;
 import hudson.model.Job;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
 import hudson.model.ParametersDefinitionProperty;
+import hudson.model.Saveable;
+import hudson.util.DescribableList;
 import hudson.util.ListBoxModel;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtension;
+import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtensionDescriptor;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -23,13 +28,20 @@ public class DirDiggerDefinition extends ParameterDefinition {
     private final Integer depth;
     private TreeNode<String> fileTree;
 
+    /**
+     * All the configured extensions attached to this.
+     */
+    private DescribableList<DirDiggerExtension,DirDiggerExtensionDescriptor> extensions;
+
     @DataBoundConstructor
-    public DirDiggerDefinition(String name, String description, String root, Integer depth) {
+    public DirDiggerDefinition(String name, String description, String root, Integer depth, List<DirDiggerExtension> extensions) {
         super(name, description);
         uuid = UUID.randomUUID();
         this.root = root;
         this.depth = depth;
         this.fileTree = new TreeNode<>(root);
+
+        this.extensions = new DescribableList<DirDiggerExtension, DirDiggerExtensionDescriptor>(Saveable.NOOP, Util.fixNull(extensions));
     }
 
     @Override
@@ -62,6 +74,10 @@ public class DirDiggerDefinition extends ParameterDefinition {
 
     public Integer getDepth() {
         return depth;
+    }
+
+    public DescribableList<DirDiggerExtension, DirDiggerExtensionDescriptor> getExtensions() {
+        return extensions;
     }
 
     public String getDivUUID() {
