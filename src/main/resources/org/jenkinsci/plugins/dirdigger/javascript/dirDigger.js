@@ -20,8 +20,8 @@ var DirDigger = DirDigger || (function($) {
         }
 
         Digger.prototype.getUrl = function() {
-                    return this.url;
-                }
+            return this.url;
+        }
 
         Digger.prototype.initChangeHandler = function() {
              var _self = this;
@@ -36,15 +36,15 @@ var DirDigger = DirDigger || (function($) {
                     }
 
                     let jsonValues = values.toJSON()
-                    jQuery.ajax({
+                    $.ajax({
                         url: _self.getUrl()+'/fillValueItems?parameterName='+_self.getName()+'&jsonFileNames='+jsonValues,
                         level: lvl
                     }).done(function(listModelBox) {
 
                         let selection = _self.getSelections()[this.level+1]
                         selection.find('option').remove().end();
-                        jQuery.each(listModelBox.values, function(j, value) {
-                            selection.append(jQuery('<option>', {
+                        $.each(listModelBox.values, function(j, value) {
+                            selection.append($('<option>', {
                                 value: value.value,
                                 text: value.value
                             }));
