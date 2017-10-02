@@ -121,5 +121,9 @@ public class DirDiggerDefinition extends ParameterDefinition {
             }
             return items;
         }
+
+        public List<DirDiggerExtensionDescriptor> getExtensionDescriptors() {
+            return DirDiggerExtensionDescriptor.all();
+        }
     }
 }

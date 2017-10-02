@@ -2,5 +2,10 @@ package org.jenkinsci.plugins.dirdigger.extensions;
 
 import hudson.model.AbstractDescribableImpl;
 
-public class DirDiggerExtension extends AbstractDescribableImpl<DirDiggerExtension> {
+public abstract class DirDiggerExtension extends AbstractDescribableImpl<DirDiggerExtension> {
+
+    @Override
+    public DirDiggerExtensionDescriptor getDescriptor() {
+        return (DirDiggerExtensionDescriptor) super.getDescriptor();
+    }
 }
