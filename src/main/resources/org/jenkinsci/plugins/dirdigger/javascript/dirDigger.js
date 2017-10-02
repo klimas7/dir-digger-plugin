@@ -49,7 +49,7 @@ var DirDigger = DirDigger || (function($) {
                                 text: value.value
                             }));
                         });
-                        selection.trigger("change");;
+                        selection.trigger("change");
                     });
                 });
              }
