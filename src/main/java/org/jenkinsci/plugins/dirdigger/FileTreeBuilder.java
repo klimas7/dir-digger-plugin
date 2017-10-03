@@ -1,40 +1,52 @@
 package org.jenkinsci.plugins.dirdigger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jenkinsci.plugins.dirdigger.extensions.impl.DirFilter;
 
 public class FileTreeBuilder {
-    public synchronized static void build(TreeNode<String> fileTree, Integer depth) {
+    public synchronized static void build(TreeNode<String> fileTree, Integer depth, List<DirFilter> dirFilters) {
         if (isTreeInitialize(fileTree)) {
             return;
         }
         File root = new File(fileTree.getData());
-        deeper(root, fileTree, depth);
+        deeper(root, fileTree, 0, depth, dirFilters);
     }
 
-    private static void deeper(File root, TreeNode rootTree, int depth) {
-        if (depth == 0 || root == null || rootTree == null) {
+    private static void deeper(File root, TreeNode rootTree, int level, int depth, List<DirFilter> dirFilters) {
+        if (level == depth || root == null || rootTree == null) {
             return;
         }
         File[] files = root.listFiles();
         if (files == null) {
             return;
         }
+
+        DirFilter dirFilter = DirFilter.WILD_CARD;
+        if (dirFilters.size() > level) {
+            dirFilter = dirFilters.get(level);
+        }
         for (File file : files) {
-            if (file.isDirectory()) {
-                TreeNode child = rootTree.addChild(file.getName());
-                deeper(file, child, depth -1);
-            } else {
-                rootTree.addChild(file.getName());
+            if (matchDirFilter(file, dirFilter)) {
+                if (file.isDirectory()) {
+                    TreeNode child = rootTree.addChild(file.getName());
+                    deeper(file, child, level +1, depth, dirFilters);
+                } else {
+                    rootTree.addChild(file.getName());
+                }
             }
         }
     }
 
+    private static boolean matchDirFilter(File file, DirFilter dirFilter) {
+        return dirFilter.getPattern().matcher(file.getName()).find();
+    }
 
     private static boolean isTreeInitialize(TreeNode<String> fileTree)
     {

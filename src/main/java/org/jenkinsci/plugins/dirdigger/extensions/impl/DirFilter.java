@@ -5,16 +5,25 @@ import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtension;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtensionDescriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import java.util.regex.Pattern;
+
 public class DirFilter extends DirDiggerExtension {
-    private String regexpFilter;
+    public static final DirFilter WILD_CARD = new DirFilter(".*");
+    private final String regexFilter;
+    private final Pattern pattern;
 
     @DataBoundConstructor
-    public DirFilter(String regexpFilter) {
-        this.regexpFilter = regexpFilter;
+    public DirFilter(String regexFilter) {
+        this.regexFilter = regexFilter;
+        this.pattern = Pattern.compile(regexFilter);
     }
 
-    public String getRegexpFilter() {
-        return regexpFilter;
+    public String getRegexFilter() {
+        return regexFilter;
+    }
+
+    public Pattern getPattern() {
+        return pattern;
     }
 
     @Override

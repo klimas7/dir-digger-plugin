@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.dirdigger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtension;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtensionDescriptor;
+import org.jenkinsci.plugins.dirdigger.extensions.impl.DirFilter;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -89,7 +91,18 @@ public class DirDiggerDefinition extends ParameterDefinition {
 
     public void initTree() {
         fileTree = new TreeNode<>(root);
-        FileTreeBuilder.build(fileTree, depth);
+        List<DirFilter> dirFilters = getDirFilters(extensions);
+        FileTreeBuilder.build(fileTree, depth, dirFilters);
+    }
+
+    private List<DirFilter> getDirFilters(DescribableList<DirDiggerExtension, DirDiggerExtensionDescriptor> extensions) {
+        List<DirFilter> dirFilters = new ArrayList<>();
+        for (DirDiggerExtension extension : extensions) {
+            if (extension instanceof DirFilter) {
+                dirFilters.add((DirFilter) extension);
+            }
+        }
+        return dirFilters;
     }
 
     public List<String> getFiles(Integer level) {
