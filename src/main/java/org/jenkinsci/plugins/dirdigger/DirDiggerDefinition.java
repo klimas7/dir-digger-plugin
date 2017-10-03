@@ -16,6 +16,7 @@ import hudson.util.DescribableList;
 import hudson.util.ListBoxModel;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtension;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtensionDescriptor;
 import org.jenkinsci.plugins.dirdigger.extensions.impl.DirFilter;
@@ -48,26 +49,33 @@ public class DirDiggerDefinition extends ParameterDefinition {
 
     @Override
     public ParameterValue createValue(StaplerRequest req, JSONObject jo) {
-        StringBuilder strValue = new StringBuilder();
-        strValue.append(root).append(File.separator);
+        DirDiggerValueBuilder dirDiggerValueBuilder = new DirDiggerValueBuilder();
+        dirDiggerValueBuilder.withName(jo.getString("name"))
+                             .withRoot(root);
+
         Object value = jo.get("value");
         if (value instanceof String) {
-            strValue.append(value).append(File.separator);
+            dirDiggerValueBuilder.addValue(value);
         } else if (value instanceof JSONArray) {
             JSONArray jsonArray = (JSONArray) value;
-            for (Object element : JSONArray.toCollection(jsonArray, String.class)) {
-                strValue.append(element).append(File.separator);
+            for (Object jsonElement : JSONArray.toCollection(jsonArray, String.class)) {
+                dirDiggerValueBuilder.addValue(jsonElement);
             }
         }
-        strValue.setLength(strValue.length() - 1);
-        DirDiggerValue dirDiggerValue = new DirDiggerValue(jo.getString("name"), strValue.toString());
-        return dirDiggerValue;
+
+        return dirDiggerValueBuilder.build();
     }
 
     @Override
-    public ParameterValue createValue(StaplerRequest staplerRequest) {
-        //TODO
-        return null;
+    public ParameterValue createValue(StaplerRequest request) {
+        DirDiggerValueBuilder dirDiggerValueBuilder = new DirDiggerValueBuilder();
+        dirDiggerValueBuilder.withName(getName())
+                             .withRoot(root);
+
+        String[] values = request.getParameterValues(getName());
+        dirDiggerValueBuilder.addValues(values);
+
+        return dirDiggerValueBuilder.build();
     }
 
     public String getRoot() {
@@ -87,7 +95,6 @@ public class DirDiggerDefinition extends ParameterDefinition {
         randomSelectName.append(getName()).append("-").append(uuid);
         return randomSelectName.toString();
     }
-
 
     public void initTree() {
         fileTree = new TreeNode<>(root);
