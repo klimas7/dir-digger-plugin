@@ -1,22 +1,17 @@
 package org.jenkinsci.plugins.dirdigger;
 
-import java.io.File;
+import hudson.Extension;
+import hudson.Util;
+import hudson.model.*;
+import hudson.util.DescribableList;
+import hudson.util.ListBoxModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import hudson.Extension;
-import hudson.Util;
-import hudson.model.Job;
-import hudson.model.ParameterDefinition;
-import hudson.model.ParameterValue;
-import hudson.model.ParametersDefinitionProperty;
-import hudson.model.Saveable;
-import hudson.util.DescribableList;
-import hudson.util.ListBoxModel;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtension;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtensionDescriptor;
 import org.jenkinsci.plugins.dirdigger.extensions.impl.DirFilter;
