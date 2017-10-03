@@ -7,36 +7,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jenkinsci.plugins.dirdigger.extensions.impl.DirFilter;
 
 public class FileTreeBuilder {
+    private static final Logger LOGGER = Logger.getLogger(FileTreeBuilder.class.getName());
     public synchronized static void build(TreeNode<String> fileTree, Integer depth, List<DirFilter> dirFilters) {
-        if (isTreeInitialize(fileTree)) {
-            return;
-        }
         File root = new File(fileTree.getData());
-        deeper(root, fileTree, 0, depth, dirFilters);
+        deeper(root, fileTree, depth, dirFilters);
     }
 
-    private static void deeper(File root, TreeNode rootTree, int level, int depth, List<DirFilter> dirFilters) {
-        if (level == depth || root == null || rootTree == null) {
+    private static void deeper(File root, TreeNode<String> rootTree, int depth, List<DirFilter> dirFilters) {
+        if (rootTree == null || rootTree.getLevel() == depth) {
             return;
         }
+
         File[] files = root.listFiles();
         if (files == null) {
             return;
         }
 
-        DirFilter dirFilter = DirFilter.WILD_CARD;
-        if (dirFilters.size() > level) {
-            dirFilter = dirFilters.get(level);
-        }
+        DirFilter dirFilter = getDirFilter(rootTree.getLevel(), dirFilters);
         for (File file : files) {
             if (matchDirFilter(file, dirFilter)) {
                 if (file.isDirectory()) {
                     TreeNode child = rootTree.addChild(file.getName());
-                    deeper(file, child, level +1, depth, dirFilters);
+                    deeper(file, child, depth, dirFilters);
                 } else {
                     rootTree.addChild(file.getName());
                 }
@@ -44,16 +42,18 @@ public class FileTreeBuilder {
         }
     }
 
+    private static DirFilter getDirFilter(int level, List<DirFilter> dirFilters) {
+        if (dirFilters.size() > level) {
+            return dirFilters.get(level);
+        }
+        return DirFilter.WILD_CARD;
+    }
+
     private static boolean matchDirFilter(File file, DirFilter dirFilter) {
         return dirFilter.getPattern().matcher(file.getName()).find();
     }
 
-    private static boolean isTreeInitialize(TreeNode<String> fileTree)
-    {
-        return fileTree.getChildren().size() > 0;
-    }
-
-    public static List<String> getFileFromLevel(TreeNode<String> fileTree, Integer level) {
+    public static List<String> getFileNameFromLevel(TreeNode<String> fileTree, Integer level) {
         List<TreeNode<String>> children = getChildren(fileTree, level);
         return convert(children);
     }
@@ -64,17 +64,17 @@ public class FileTreeBuilder {
         }
         List<String> files = new ArrayList<>(children.size());
         for (TreeNode<String> node : children) {
-            files.add(node.data);
+            files.add(node.getData());
         }
         return files;
     }
 
     private static List<TreeNode<String>> getChildren(TreeNode<String> fileTree, Integer level) {
-        if (level == 1) {
+        if (level.equals(fileTree.getLevel())) {
             return fileTree.getChildren();
         }
-        else if (fileTree.getChildren().size() > 0) {
-            return getChildren(fileTree.getChildren().get(0), level - 1);
+        else if (fileTree.hasChildren()) {
+            return getChildren(fileTree.getFirstChild(), level);
         }
         else {
             return Collections.emptyList();
@@ -100,7 +100,7 @@ public class FileTreeBuilder {
         try {
             return obj.readValue(jsonFileNames, List.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "JSON mapping exception", e);
         }
         return Collections.emptyList();
     }

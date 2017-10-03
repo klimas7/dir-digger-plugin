@@ -8,7 +8,7 @@
             <input type="hidden" name="name" value="${it.name}"/>
             <j:invoke method="initTree" on="${it}"/>
             <table>
-                <j:forEach var="depth" begin="1" end="${it.depth}">
+                <j:forEach var="depth" begin="0" end="${it.depth-1}">
                     <tr>
                         <td>Level: ${depth}</td>
                         <td>
@@ -25,7 +25,7 @@
         <script type="text/javascript">
             var parentDiv = jQuery('#${divId}');
             var selections = [];
-            for (let lvl=1; lvl &lt;= (${it.depth}); lvl++) {
+            for (let lvl=0; lvl &lt; (${it.depth}); lvl++) {
                 selections.push(parentDiv.find("#lvl_"+lvl));
             }
 

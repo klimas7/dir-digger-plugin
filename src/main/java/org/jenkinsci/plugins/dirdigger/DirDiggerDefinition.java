@@ -106,7 +106,7 @@ public class DirDiggerDefinition extends ParameterDefinition {
     }
 
     public List<String> getFiles(Integer level) {
-        return FileTreeBuilder.getFileFromLevel(fileTree, level);
+        return FileTreeBuilder.getFileNameFromLevel(fileTree, level);
     }
 
     public List<String> getFiles(String jsonFileNames) {
