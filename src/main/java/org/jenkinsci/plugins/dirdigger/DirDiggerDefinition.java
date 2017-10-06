@@ -5,8 +5,10 @@ import hudson.Util;
 import hudson.cli.CLICommand;
 import hudson.model.*;
 import hudson.util.DescribableList;
+import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +153,14 @@ public class DirDiggerDefinition extends ParameterDefinition {
 
         public List<DirDiggerExtensionDescriptor> getExtensionDescriptors() {
             return DirDiggerExtensionDescriptor.all();
+        }
+
+        public FormValidation doCheckRoot(@QueryParameter String value) {
+            File root = new File(value);
+            if (!root.exists() || !root.canExecute()) {
+                return FormValidation.error("File not exists or can't execute");
+            }
+            return FormValidation.ok();
         }
     }
 }
