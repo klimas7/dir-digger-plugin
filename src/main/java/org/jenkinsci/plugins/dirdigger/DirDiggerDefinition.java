@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtension;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtensionDescriptor;
 import org.jenkinsci.plugins.dirdigger.extensions.impl.DirFilter;
@@ -159,6 +160,13 @@ public class DirDiggerDefinition extends ParameterDefinition {
             File root = new File(value);
             if (!root.exists() || !root.canExecute()) {
                 return FormValidation.error("File not exists or can't execute");
+            }
+            return FormValidation.ok();
+        }
+
+        public FormValidation doCheckDepth(@QueryParameter String value) {
+            if (StringUtils.isBlank(value) || !StringUtils.isNumeric(value)) {
+                return FormValidation.error("Depth must be number");
             }
             return FormValidation.ok();
         }

@@ -10,7 +10,7 @@
         <f:textbox/>
     </f:entry>
     <f:entry title="Depth" field="depth">
-        <f:textbox/>
+        <f:textbox default="1"/>
     </f:entry>
 
     <f:entry title="Additional Behaviours">
