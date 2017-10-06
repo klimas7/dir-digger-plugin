@@ -1,11 +1,14 @@
 package org.jenkinsci.plugins.dirdigger.extensions.impl;
 
 import hudson.Extension;
+import hudson.util.FormValidation;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtension;
 import org.jenkinsci.plugins.dirdigger.extensions.DirDiggerExtensionDescriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class DirFilter extends DirDiggerExtension {
     public static final DirFilter WILD_CARD = new DirFilter(".*");
@@ -49,6 +52,16 @@ public class DirFilter extends DirDiggerExtension {
         @Override
         public String getDisplayName() {
             return "File filter";
+        }
+
+        public FormValidation doCheckRegexFilter(@QueryParameter String value) {
+            try {
+                Pattern.compile(value);
+            }
+            catch (PatternSyntaxException ex) {
+                return FormValidation.error("Invalid pattern: " + ex.getMessage());
+            }
+            return FormValidation.ok();
         }
     }
 }
