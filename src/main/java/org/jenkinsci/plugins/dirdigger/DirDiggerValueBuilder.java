@@ -46,7 +46,7 @@ public class DirDiggerValueBuilder {
             stringValue.append(value).append(File.separator);
         }
 
-        if (stringValue.indexOf(root) == 0) {
+        if (stringValue.indexOf(root) != 0) {
             stringValue.insert(0, root).insert(root.length(), File.separator);
         }
 

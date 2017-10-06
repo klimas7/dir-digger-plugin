@@ -2,10 +2,12 @@ package org.jenkinsci.plugins.dirdigger;
 
 import hudson.Extension;
 import hudson.Util;
+import hudson.cli.CLICommand;
 import hudson.model.*;
 import hudson.util.DescribableList;
 import hudson.util.ListBoxModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -69,6 +71,16 @@ public class DirDiggerDefinition extends ParameterDefinition {
 
         String[] values = request.getParameterValues(getName());
         dirDiggerValueBuilder.addValues(values);
+
+        return dirDiggerValueBuilder.build();
+    }
+
+    @Override
+    public ParameterValue createValue(CLICommand command, String value) throws IOException, InterruptedException {
+        DirDiggerValueBuilder dirDiggerValueBuilder = new DirDiggerValueBuilder();
+        dirDiggerValueBuilder.withName(getName())
+                .withRoot(root)
+                .addValue(value);
 
         return dirDiggerValueBuilder.build();
     }
