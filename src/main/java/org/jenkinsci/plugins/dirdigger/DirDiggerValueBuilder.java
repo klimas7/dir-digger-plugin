@@ -41,10 +41,15 @@ public class DirDiggerValueBuilder {
 
     public DirDiggerValue build() {
         StringBuilder stringValue = new StringBuilder();
-        stringValue.append(root).append(File.separator);
+
         for (String value : values) {
             stringValue.append(value).append(File.separator);
         }
+
+        if (stringValue.indexOf(root) == 0) {
+            stringValue.insert(0, root).insert(root.length(), File.separator);
+        }
+
         stringValue.setLength(stringValue.length() - 1);
         DirDiggerValue dirDiggerValue = new DirDiggerValue(name, stringValue.toString());
         return dirDiggerValue;
