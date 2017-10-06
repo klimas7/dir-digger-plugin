@@ -14,6 +14,7 @@ import org.jenkinsci.plugins.dirdigger.extensions.impl.DirFilter;
 
 public class FileTreeBuilder {
     private static final Logger LOGGER = Logger.getLogger(FileTreeBuilder.class.getName());
+
     public synchronized static void build(TreeNode<String> fileTree, Integer depth, List<DirFilter> dirFilters) {
         File root = new File(fileTree.getData());
         deeper(root, fileTree, depth, dirFilters);
@@ -72,11 +73,9 @@ public class FileTreeBuilder {
     private static List<TreeNode<String>> getChildren(TreeNode<String> fileTree, Integer level) {
         if (level.equals(fileTree.getLevel())) {
             return fileTree.getChildren();
-        }
-        else if (fileTree.hasChildren()) {
+        } else if (fileTree.hasChildren()) {
             return getChildren(fileTree.getFirstChild(), level);
-        }
-        else {
+        } else {
             return Collections.emptyList();
         }
     }

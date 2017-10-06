@@ -29,7 +29,7 @@ public class DirDiggerDefinition extends ParameterDefinition {
     /**
      * All the configured extensions attached to this.
      */
-    private DescribableList<DirDiggerExtension,DirDiggerExtensionDescriptor> extensions;
+    private DescribableList<DirDiggerExtension, DirDiggerExtensionDescriptor> extensions;
 
     @DataBoundConstructor
     public DirDiggerDefinition(String name, String description, String root, Integer depth, List<DirDiggerExtension> extensions) {
@@ -46,7 +46,7 @@ public class DirDiggerDefinition extends ParameterDefinition {
     public ParameterValue createValue(StaplerRequest req, JSONObject jo) {
         DirDiggerValueBuilder dirDiggerValueBuilder = new DirDiggerValueBuilder();
         dirDiggerValueBuilder.withName(jo.getString("name"))
-                             .withRoot(root);
+                .withRoot(root);
 
         Object value = jo.get("value");
         if (value instanceof String) {
@@ -65,7 +65,7 @@ public class DirDiggerDefinition extends ParameterDefinition {
     public ParameterValue createValue(StaplerRequest request) {
         DirDiggerValueBuilder dirDiggerValueBuilder = new DirDiggerValueBuilder();
         dirDiggerValueBuilder.withName(getName())
-                             .withRoot(root);
+                .withRoot(root);
 
         String[] values = request.getParameterValues(getName());
         dirDiggerValueBuilder.addValues(values);
